@@ -1,0 +1,216 @@
+﻿@model Assingment_3.DTO.CustomerProfileUpdateDto
+@{
+    ViewData["Title"] = "MyProfile";
+}
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<h2>My Profile</h2>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card border-info shadow-lg p-3 mb-5 bg-white rounded" style="max-width: 18rem;">
+                <div class="card-body">
+                    <div>
+                        <p>Hi @Model.FirstName @Model.LastName,</p>
+                        <p>Added On: @(Model.AddedOn.HasValue ? Model.AddedOn.Value.ToString("dd/MM/yyyy hh:mm tt") : "")</p>
+                        <p>Updated On: @(Model.UpdatedOn.HasValue ? Model.UpdatedOn.Value.ToString("dd/MM/yyyy hh:mm tt") : "")</p>
+                        <a asp-action="LogOut" class="btn btn-outline-danger" role="button">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="container-fluid h-100">
+                <div class="row h-100 justify-content-center align-items-center">
+                    <div class="col-md-6">
+                        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                            <div class="card-body">
+                                <form asp-action="Update" method="post" id="UpdateForm">
+                                    <div class="form-group">
+                                        <label asp-for="FirstName" class="required-label">First Name</label>
+                                        <label asp-for="FirstName" class="required-label text-danger">*</label>
+                                        <input asp-for="FirstName" class="form-control" id="FirstName" />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="LastName" class="required-label">Last Name</label>
+                                        <label asp-for="LastName" class="required-label text-danger">*</label>
+                                        <input asp-for="LastName" class="form-control" id="LastName" />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="ContactNo" class="required-label">Contact No</label>
+                                        <label asp-for="ContactNo" class="required-label text-danger">*</label>
+                                        <input asp-for="ContactNo" class="form-control" id="ContactNo" />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="DateOfBirth" class="required-label">Date Of Birth</label>
+                                        <label asp-for="DateOfBirth" class="required-label text-danger">*</label>
+                                        <input asp-for="DateOfBirth" class="form-control" type="text" id="DateOfBirth"  />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Email" class="required-label">Email</label>
+                                        <label asp-for="Email" class="required-label text-danger">*</label>
+                                        <input asp-for="Email" class="form-control" id="Email" />
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="NewPassword" class="required-label">NewPassword</label>
+                                        <label asp-for="NewPassword" class="required-label text-danger">*</label>
+                                        <input asp-for="NewPassword" type="password" class="form-control" id="NewPassword" />
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="ConfirmNewPassword" class="required-label">Confirm NewPassword</label>
+                                        <label asp-for="ConfirmNewPassword" class="required-label text-danger">*</label>
+                                        <input asp-for="ConfirmNewPassword" type="password" class="form-control" id="ConfirmNewPassword" />
+
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <button type="submit" class="btn btn-outline-success">Update Profile</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> *
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+    @if (TempData["Message"] != null)
+    {
+
+        <script src="sweetalert2.min.js"></script>
+        <link rel="stylesheet" href="sweetalert2.min.css">
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'success',
+                title: ' @TempData["Message"]'
+            })
+
+        </script>
+    }
+
+    <script>
+        $(document).ready(function () {
+            $("#UpdateForm").validate({
+                rules: {
+                    FirstName: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 255
+                    },
+                    LastName: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 255
+                    },
+                    ContactNo: {
+                        required: true,
+                        digits: true,
+                        minlength: 10,
+                        maxlength: 10
+                    },
+                  
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    NewPassword: {
+                        required: true,
+                        // minlength: 8,
+                        // maxlength: 12,
+                        // strongPassword: true
+                    },
+                    ConfirmNewPassword: {
+                        required: true,
+                        equalTo: "#NewPassword"
+                    }
+                },
+                messages: {
+                    FirstName: {
+                        required: "Please enter your first name",
+                        minlength: "First name must be at least 2 characters",
+                        maxlength: "First name must not exceed 255 characters"
+                    },
+                    LastName: {
+                        required: "Please enter your last name",
+                        minlength: "Last name must be at least 2 characters",
+                        maxlength: "Last name must not exceed 255 characters"
+                    },
+                    ContactNo: {
+                        required: "Please enter your contact number",
+                        digits: "Contact No. should be numeric",
+                        minlength: "Contact No. should be exactly 10 digits",
+                        maxlength: "Contact No. should be exactly 10 digits"
+                    },
+                    
+                    Email: {
+                        required: "Please enter your email",
+                        email: "Please enter a valid email address"
+                    },
+                    NewPassword: {
+                        required: "Please enter a password",
+                        minlength: "Password must be at least 8 characters",
+                        maxlength: "Password must not exceed 12 characters",
+                        strongPassword: "Password must contain at least one letter, one number, and one special character"
+                    },
+                    ConfirmNewPassword: {
+                        required: "Please confirm your password",
+                        equalTo: "Passwords do not match"
+                    }
+                },
+                errorPlacement: function (error, element) {
+
+                    error.insertAfter(element);
+
+                    // Add inline styles to the error message
+                    error.css({
+                        'color': 'red', // Set the text color to red
+                        'font-size': '14px' // Set the font size as desired
+                    });
+                }
+            });
+
+            $(function () {
+                $("#DateOfBirth").datepicker({ maxDate: 0 });
+            });
+
+            // Define custom validation for a strong password
+            $.validator.addMethod("strongPassword", function (value, element) {
+                return /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$/.test(value);
+            }, "Password must contain at least one letter, one number, and one special character.");
+
+        });
+    </script>
+
+}
